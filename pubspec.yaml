@@ -19,8 +19,6 @@ dependencies:
   cloud_firestore: 0.13.7
   # google_sign_in: 4.5.1
   audioplayers: 0.15.1
-  firebase_core: 0.4.5
-  flutter_dotenv: 2.1.0
   arcore_flutter_plugin:
     git:
       url: git://github.com/giandifra/arcore_flutter_plugin.git
@@ -41,7 +39,6 @@ flutter:
     - assets/icon.png
     - assets/idle.wav
     - assets/game-over.wav
-    - .env
 
 flutter_icons:
   image_path: "assets/icon.png"

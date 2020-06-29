@@ -1,7 +1,6 @@
 import 'package:CoronaDOOM/helpers/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 FirebaseApp app;
 Firestore firestore;
@@ -11,21 +10,6 @@ class Score {
   int score;
 
   Score(this.name, this.score);
-}
-
-Future<void> initScoring() async {
-  final env = DotEnv().env;
-
-  app = await FirebaseApp.configure(
-    name: env["APP"],
-    options: const FirebaseOptions(
-      googleAppID: '1:79601577497:ios:5f2bcc6ba8cecddd',
-      apiKey: 'AIzaSyArgmRGfB5kiQT6CunAOmKRVKEsxKmy6YI-G72PVU',
-      projectID: 'flutter-hack-2020-corona-doom',
-    ),
-  );
-
-  firestore = Firestore(app: app);
 }
 
 Future<void> updateScore(String name, int score) async {

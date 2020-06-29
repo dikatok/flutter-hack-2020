@@ -3,11 +3,9 @@ import 'package:CoronaDOOM/screens/game.dart';
 import 'package:CoronaDOOM/screens/screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DotEnv().load();
   runApp(MyApp());
 }
 
