@@ -1,4 +1,4 @@
-package com.example.flutter_hack_2020
+package com.dikatok.coronadoom
 
 import io.flutter.embedding.android.FlutterActivity
 
