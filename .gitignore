@@ -45,3 +45,4 @@ app.*.map.json
 
 google-services.json
 .env*
+*.jks
