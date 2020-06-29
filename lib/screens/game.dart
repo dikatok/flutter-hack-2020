@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:CoronaDOOM/helpers/helpers.dart';
 import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,11 +27,14 @@ class _GameState extends State<Game> {
   Set<String> viruses = {};
   int score = 0;
 
+  TextEditingController nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Stack(
             fit: StackFit.expand,
             children: [
@@ -202,6 +206,7 @@ class _GameState extends State<Game> {
   }
 
   void _gameOver() {
+    playGameOver();
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -228,13 +233,30 @@ class _GameState extends State<Game> {
               style: const TextStyle(color: Colors.green, fontSize: 24),
             ),
             const SizedBox(height: 32),
+            TextField(
+              controller: nameController,
+              maxLength: 20,
+              decoration: InputDecoration(
+                hintText: "Your name...",
+                fillColor: Colors.white,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
             FlatButton(
               padding: const EdgeInsets.all(16),
               shape: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
                 borderSide: BorderSide(color: Colors.green, width: 2),
               ),
-              onPressed: Navigator.of(context).pop,
+              onPressed: () async {
+                final name = nameController.text;
+                await updateScore(name, score);
+                Navigator.of(context).pop();
+              },
               child: const Text(
                 "Return",
                 style: TextStyle(color: Colors.green, fontSize: 18),

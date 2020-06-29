@@ -1,15 +1,17 @@
+import 'package:CoronaDOOM/helpers/helpers.dart';
+import 'package:CoronaDOOM/screens/game.dart';
+import 'package:CoronaDOOM/screens/screens.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:flutter_hack_2020/screens/game.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // print(await ArCoreController.checkArCoreAvailability());
+  await DotEnv().load();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,57 +24,93 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  FirebaseUser user;
+
+  @override
+  void initState() {
+    playIdle();
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      user = await getCurrentUser();
+      if (user == null) {
+        await signIn();
+      }
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    padding: const EdgeInsets.all(16),
-                    shape: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      borderSide: BorderSide(color: Colors.green, width: 2),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Stack(
+            children: [
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      padding: const EdgeInsets.all(16),
+                      shape: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        borderSide: BorderSide(color: Colors.green, width: 2),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Game()));
+                      },
+                      child: const Text(
+                        "PLAY",
+                        style: TextStyle(color: Colors.green, fontSize: 24),
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Game()));
-                    },
-                    child: const Text(
-                      "PLAY",
-                      style: TextStyle(color: Colors.green, fontSize: 24),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  GoogleSignInButton(
-                    onPressed: () {},
-                  ),
-                ],
+                    // const SizedBox(height: 32),
+                    // GoogleSignInButton(
+                    //   text: user == null
+                    //       ? "Sign in with Google"
+                    //       : "Signed in as ${user.displayName}",
+                    //   onPressed: () async {
+                    //     if (user == null) {
+                    //       user = await signIn();
+                    //     } else {
+                    //       user = null;
+                    //       // await signou
+                    //     }
+                    //   },
+                    // ),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              bottom: 8,
-              width: MediaQuery.of(context).size.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FlatButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Leaderboard",
-                      style: TextStyle(color: Colors.green, fontSize: 18),
+              Positioned(
+                bottom: 8,
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Leaderboard()));
+                      },
+                      child: const Text(
+                        "Leaderboard",
+                        style: TextStyle(color: Colors.green, fontSize: 18),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
